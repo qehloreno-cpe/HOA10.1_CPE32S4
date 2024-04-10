@@ -1,0 +1,10 @@
+[gns3_router]
+R1
+
+[gns3_router:vars]
+ansible_user=loreno
+ansible_password=loreno
+ansible_network_os=ios
+ansible_become=yes
+ansible_become_method=enable
+

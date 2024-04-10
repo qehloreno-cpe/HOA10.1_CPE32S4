@@ -1,0 +1,51 @@
+---
+- hosts: gns3_router
+  connection: network_cli
+  gather_facts: no
+  vars:
+    ansible_ssh_private_key_file: /home/akosieric/.ssh/id_rsa
+  tasks:
+    - name: Change hostname of R1
+      ios_config:
+        lines:
+          - hostname R1_ELoreno
+
+    - name: Activate service password-encryption
+      ios_config:
+        lines:
+          - service password-encryption
+
+    - name: Configure MOTD
+      ios_banner:
+        banner: login
+        text: |
+          Authorized Access Only!
+
+    - name: Line console 0 configuration
+      ios_config:
+        lines:
+          - password eric
+          - login
+        parents: line console 0
+
+    - name: Enable secret pass
+      ios_config:
+        lines:
+          - enable secret class
+
+    - name: Configure IP address on interface g0/1
+      ios_config:
+        lines:
+          - ip address 10.1.1.100 255.255.255.0
+        parents: interface g0/1
+
+    - name: Enable interface g0/1
+      ios_config:
+        lines:
+          - no shutdown
+        parents: interface g0/1
+
+    - name: Saving configurations
+      ios_config:
+        lines:
+          - do write memory
